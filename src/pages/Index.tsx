@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Heart, Gamepad2, CalendarIcon, ArrowRight } from "lucide-react";
+import { Mail, Heart, Gamepad2, CalendarIcon, Activity, ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
 
 const features = [
@@ -31,6 +31,13 @@ const features = [
     description: "Organize your schedule with a calendar and task list to stay on top of deadlines.",
     color: "gradient-warm",
   },
+  {
+    to: "/stretching",
+    icon: Activity,
+    title: "Stretching Guide",
+    description: "Follow along with guided stretches to release tension and calm your body.",
+    color: "gradient-calm",
+  },
 ];
 
 const Index = () => {
@@ -48,7 +55,7 @@ const Index = () => {
         </div>
 
         {/* Feature Cards */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f, i) => (
             <Link
               key={f.to}
