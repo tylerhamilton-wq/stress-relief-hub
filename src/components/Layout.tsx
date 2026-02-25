@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Mail, Heart, Gamepad2, Home, CalendarIcon } from "lucide-react";
+import { Mail, Heart, Gamepad2, Home, CalendarIcon, Activity } from "lucide-react";
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
@@ -7,6 +7,7 @@ const navItems = [
   { to: "/stress-coping", label: "Coping Tips", icon: Heart },
   { to: "/games", label: "Games", icon: Gamepad2 },
   { to: "/planner", label: "Planner", icon: CalendarIcon },
+  { to: "/stretching", label: "Stretching", icon: Activity },
 ];
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
