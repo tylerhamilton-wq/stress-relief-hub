@@ -4,11 +4,21 @@ import { Gamepad2 } from "lucide-react";
 import BreathingGame from "@/components/games/BreathingGame";
 import MemoryGame from "@/components/games/MemoryGame";
 import ColorTapGame from "@/components/games/ColorTapGame";
+import WordScrambleGame from "@/components/games/WordScrambleGame";
+import ReactionTimeGame from "@/components/games/ReactionTimeGame";
+import PatternRepeatGame from "@/components/games/PatternRepeatGame";
+import ZenGardenGame from "@/components/games/ZenGardenGame";
+import GratitudeJarGame from "@/components/games/GratitudeJarGame";
 
 const games = [
   { id: "breathing", title: "Breathing Exercise", emoji: "🌬️", description: "Follow the circle and calm your mind" },
   { id: "memory", title: "Memory Match", emoji: "🧠", description: "Flip cards and find matching pairs" },
   { id: "colortap", title: "Color Tap", emoji: "🎨", description: "Tap the correct color as fast as you can" },
+  { id: "wordscramble", title: "Word Scramble", emoji: "🔤", description: "Unscramble calming words" },
+  { id: "reaction", title: "Reaction Time", emoji: "⚡", description: "Test your reflexes and focus" },
+  { id: "pattern", title: "Pattern Repeat", emoji: "🔁", description: "Remember and repeat the sequence" },
+  { id: "zen", title: "Zen Garden", emoji: "🪨", description: "Create your own peaceful space" },
+  { id: "gratitude", title: "Gratitude Jar", emoji: "🫙", description: "Collect things you're thankful for" },
 ];
 
 const Games = () => {
@@ -27,13 +37,13 @@ const Games = () => {
         </div>
 
         {!activeGame ? (
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {games.map((game, i) => (
               <button
                 key={game.id}
                 onClick={() => setActiveGame(game.id)}
                 className="group rounded-2xl border bg-card p-6 text-left shadow-card transition-all hover:-translate-y-1 hover:shadow-soft animate-slide-up"
-                style={{ animationDelay: `${i * 100}ms`, animationFillMode: "both" }}
+                style={{ animationDelay: `${i * 80}ms`, animationFillMode: "both" }}
               >
                 <span className="mb-3 block text-4xl">{game.emoji}</span>
                 <h3 className="mb-1 font-semibold text-foreground">{game.title}</h3>
@@ -53,6 +63,11 @@ const Games = () => {
               {activeGame === "breathing" && <BreathingGame />}
               {activeGame === "memory" && <MemoryGame />}
               {activeGame === "colortap" && <ColorTapGame />}
+              {activeGame === "wordscramble" && <WordScrambleGame />}
+              {activeGame === "reaction" && <ReactionTimeGame />}
+              {activeGame === "pattern" && <PatternRepeatGame />}
+              {activeGame === "zen" && <ZenGardenGame />}
+              {activeGame === "gratitude" && <GratitudeJarGame />}
             </div>
           </div>
         )}
