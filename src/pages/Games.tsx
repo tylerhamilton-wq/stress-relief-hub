@@ -14,6 +14,11 @@ import MindfulColoringGame from "@/components/games/MindfulColoringGame";
 import NumberZenGame from "@/components/games/NumberZenGame";
 import AffirmationFlipGame from "@/components/games/AffirmationFlipGame";
 import FocusFlowGame from "@/components/games/FocusFlowGame";
+import EmojiSudokuGame from "@/components/games/EmojiSudokuGame";
+import TypingZenGame from "@/components/games/TypingZenGame";
+import MindMapGame from "@/components/games/MindMapGame";
+import CalmCatcherGame from "@/components/games/CalmCatcherGame";
+import DoodlePromptGame from "@/components/games/DoodlePromptGame";
 
 const games = [
   { id: "breathing", title: "Breathing Exercise", emoji: "🌬️", description: "Follow the circle and calm your mind" },
@@ -29,6 +34,11 @@ const games = [
   { id: "numberzen", title: "Number Zen", emoji: "🔢", description: "Find numbers that add to the target" },
   { id: "affirmation", title: "Affirmation Cards", emoji: "💛", description: "Flip cards for positive affirmations" },
   { id: "focusflow", title: "Focus Flow", emoji: "🎯", description: "Keep the dot in the zone" },
+  { id: "emojisudoku", title: "Emoji Sudoku", emoji: "🧩", description: "Place emojis with no row/column repeats" },
+  { id: "typingzen", title: "Typing Zen", emoji: "⌨️", description: "Type calming words as fast as you can" },
+  { id: "mindmap", title: "Mind Map", emoji: "🗺️", description: "Brainstorm words across categories" },
+  { id: "calmcatcher", title: "Calm Catcher", emoji: "🧺", description: "Catch good items, dodge the bad" },
+  { id: "doodle", title: "Doodle Prompt", emoji: "✏️", description: "Draw creative prompts on a pixel grid" },
 ];
 
 const Games = () => {
@@ -83,6 +93,11 @@ const Games = () => {
               {activeGame === "numberzen" && <NumberZenGame />}
               {activeGame === "affirmation" && <AffirmationFlipGame />}
               {activeGame === "focusflow" && <FocusFlowGame />}
+              {activeGame === "emojisudoku" && <EmojiSudokuGame />}
+              {activeGame === "typingzen" && <TypingZenGame />}
+              {activeGame === "mindmap" && <MindMapGame />}
+              {activeGame === "calmcatcher" && <CalmCatcherGame />}
+              {activeGame === "doodle" && <DoodlePromptGame />}
             </div>
           </div>
         )}
