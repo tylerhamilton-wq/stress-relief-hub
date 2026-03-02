@@ -9,6 +9,11 @@ import ReactionTimeGame from "@/components/games/ReactionTimeGame";
 import PatternRepeatGame from "@/components/games/PatternRepeatGame";
 import ZenGardenGame from "@/components/games/ZenGardenGame";
 import GratitudeJarGame from "@/components/games/GratitudeJarGame";
+import BubblePopGame from "@/components/games/BubblePopGame";
+import MindfulColoringGame from "@/components/games/MindfulColoringGame";
+import NumberZenGame from "@/components/games/NumberZenGame";
+import AffirmationFlipGame from "@/components/games/AffirmationFlipGame";
+import FocusFlowGame from "@/components/games/FocusFlowGame";
 
 const games = [
   { id: "breathing", title: "Breathing Exercise", emoji: "🌬️", description: "Follow the circle and calm your mind" },
@@ -19,6 +24,11 @@ const games = [
   { id: "pattern", title: "Pattern Repeat", emoji: "🔁", description: "Remember and repeat the sequence" },
   { id: "zen", title: "Zen Garden", emoji: "🪨", description: "Create your own peaceful space" },
   { id: "gratitude", title: "Gratitude Jar", emoji: "🫙", description: "Collect things you're thankful for" },
+  { id: "bubblepop", title: "Bubble Pop", emoji: "🫧", description: "Pop rising bubbles for stress relief" },
+  { id: "coloring", title: "Mindful Coloring", emoji: "🖌️", description: "Paint a grid and let creativity flow" },
+  { id: "numberzen", title: "Number Zen", emoji: "🔢", description: "Find numbers that add to the target" },
+  { id: "affirmation", title: "Affirmation Cards", emoji: "💛", description: "Flip cards for positive affirmations" },
+  { id: "focusflow", title: "Focus Flow", emoji: "🎯", description: "Keep the dot in the zone" },
 ];
 
 const Games = () => {
@@ -68,6 +78,11 @@ const Games = () => {
               {activeGame === "pattern" && <PatternRepeatGame />}
               {activeGame === "zen" && <ZenGardenGame />}
               {activeGame === "gratitude" && <GratitudeJarGame />}
+              {activeGame === "bubblepop" && <BubblePopGame />}
+              {activeGame === "coloring" && <MindfulColoringGame />}
+              {activeGame === "numberzen" && <NumberZenGame />}
+              {activeGame === "affirmation" && <AffirmationFlipGame />}
+              {activeGame === "focusflow" && <FocusFlowGame />}
             </div>
           </div>
         )}
