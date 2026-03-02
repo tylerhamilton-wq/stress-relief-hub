@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Heart, Gamepad2, CalendarIcon, Activity, ArrowRight } from "lucide-react";
+import { Mail, Heart, Gamepad2, CalendarIcon, Activity, ArrowRight, BookOpen } from "lucide-react";
 import Layout from "@/components/Layout";
 
 const features = [
@@ -37,6 +37,13 @@ const features = [
     title: "Stretching Guide",
     description: "Follow along with guided stretches to release tension and calm your body.",
     color: "gradient-calm",
+  },
+  {
+    to: "/journal",
+    icon: BookOpen,
+    title: "My Journal",
+    description: "Write down your thoughts, feelings, and reflections in a private journal.",
+    color: "gradient-warm",
   },
 ];
 
