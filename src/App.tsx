@@ -9,6 +9,7 @@ import StressCoping from "./pages/StressCoping";
 import Games from "./pages/Games";
 import TimeManager from "./pages/TimeManager";
 import StretchingGuide from "./pages/StretchingGuide";
+import Journal from "./pages/Journal";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/games" element={<Games />} />
           <Route path="/planner" element={<TimeManager />} />
           <Route path="/stretching" element={<StretchingGuide />} />
+          <Route path="/journal" element={<Journal />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
