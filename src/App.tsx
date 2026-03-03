@@ -10,6 +10,7 @@ import Games from "./pages/Games";
 import TimeManager from "./pages/TimeManager";
 import StretchingGuide from "./pages/StretchingGuide";
 import Journal from "./pages/Journal";
+import Meditation from "./pages/Meditation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/planner" element={<TimeManager />} />
           <Route path="/stretching" element={<StretchingGuide />} />
           <Route path="/journal" element={<Journal />} />
+          <Route path="/meditation" element={<Meditation />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Heart, Gamepad2, CalendarIcon, Activity, ArrowRight, BookOpen } from "lucide-react";
+import { Mail, Heart, Gamepad2, CalendarIcon, Activity, ArrowRight, BookOpen, Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
 
 const features = [
@@ -44,6 +44,13 @@ const features = [
     title: "My Journal",
     description: "Write down your thoughts, feelings, and reflections in a private journal.",
     color: "gradient-warm",
+  },
+  {
+    to: "/meditation",
+    icon: Sparkles,
+    title: "Guided Meditation",
+    description: "Follow step-by-step guided meditations to calm your mind and find inner peace.",
+    color: "gradient-calm",
   },
 ];
 
