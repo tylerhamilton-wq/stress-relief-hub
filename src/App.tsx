@@ -11,6 +11,8 @@ import TimeManager from "./pages/TimeManager";
 import StretchingGuide from "./pages/StretchingGuide";
 import Journal from "./pages/Journal";
 import Meditation from "./pages/Meditation";
+import Affirmations from "./pages/Affirmations";
+import MoodTracker from "./pages/MoodTracker";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +32,8 @@ const App = () => (
           <Route path="/stretching" element={<StretchingGuide />} />
           <Route path="/journal" element={<Journal />} />
           <Route path="/meditation" element={<Meditation />} />
+          <Route path="/affirmations" element={<Affirmations />} />
+          <Route path="/mood-tracker" element={<MoodTracker />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
