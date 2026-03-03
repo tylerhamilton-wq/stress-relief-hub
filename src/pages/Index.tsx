@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Heart, Gamepad2, CalendarIcon, Activity, ArrowRight, BookOpen, Sparkles } from "lucide-react";
+import { Mail, Heart, Gamepad2, CalendarIcon, Activity, ArrowRight, BookOpen, Sparkles, Sun, BarChart3 } from "lucide-react";
 import Layout from "@/components/Layout";
 
 const features = [
@@ -50,6 +50,20 @@ const features = [
     icon: Sparkles,
     title: "Guided Meditation",
     description: "Follow step-by-step guided meditations to calm your mind and find inner peace.",
+    color: "gradient-calm",
+  },
+  {
+    to: "/affirmations",
+    icon: Sun,
+    title: "Positive Affirmations",
+    description: "Boost your mindset with uplifting affirmations across confidence, calm, and self-love.",
+    color: "gradient-warm",
+  },
+  {
+    to: "/mood-tracker",
+    icon: BarChart3,
+    title: "Mood Tracker",
+    description: "Log your daily mood, add notes, and track patterns to better understand yourself.",
     color: "gradient-calm",
   },
 ];
