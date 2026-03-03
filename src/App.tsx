@@ -13,6 +13,7 @@ import Journal from "./pages/Journal";
 import Meditation from "./pages/Meditation";
 import Affirmations from "./pages/Affirmations";
 import MoodTracker from "./pages/MoodTracker";
+import SleepSounds from "./pages/SleepSounds";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/meditation" element={<Meditation />} />
           <Route path="/affirmations" element={<Affirmations />} />
           <Route path="/mood-tracker" element={<MoodTracker />} />
+          <Route path="/sleep-sounds" element={<SleepSounds />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

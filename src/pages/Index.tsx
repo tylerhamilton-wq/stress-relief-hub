@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Heart, Gamepad2, CalendarIcon, Activity, ArrowRight, BookOpen, Sparkles, Sun, BarChart3 } from "lucide-react";
+import { Mail, Heart, Gamepad2, CalendarIcon, Activity, ArrowRight, BookOpen, Sparkles, Sun, Headphones } from "lucide-react";
 import Layout from "@/components/Layout";
 
 const features = [
@@ -60,10 +60,10 @@ const features = [
     color: "gradient-warm",
   },
   {
-    to: "/mood-tracker",
-    icon: BarChart3,
-    title: "Mood Tracker",
-    description: "Log your daily mood, add notes, and track patterns to better understand yourself.",
+    to: "/sleep-sounds",
+    icon: Headphones,
+    title: "Sleep Sounds",
+    description: "Mix ambient sounds like rain, ocean, and fireplace to create your perfect relaxation atmosphere.",
     color: "gradient-calm",
   },
 ];
