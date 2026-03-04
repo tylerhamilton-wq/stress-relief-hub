@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Mail, Heart, Gamepad2, Home, CalendarIcon, Activity, BookOpen, Sparkles, Sun, Headphones } from "lucide-react";
+import ThemeCustomizer, { useTheme } from "@/components/ThemeCustomizer";
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
@@ -16,14 +18,20 @@ const navItems = [
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
+  const [themeOpen, setThemeOpen] = useState(false);
+  const { currentTheme, setCurrentTheme } = useTheme();
 
   return (
     <div className="min-h-screen bg-background">
       <nav className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <Link to="/" className="text-lg font-bold text-primary">
+          <button
+            onClick={() => setThemeOpen(true)}
+            className="text-lg font-bold text-primary transition-transform hover:scale-105 active:scale-95"
+            title="Customize theme"
+          >
             🌿 StudentZen
-          </Link>
+          </button>
           <div className="flex gap-1">
             {navItems.map((item) => {
               const isActive = location.pathname === item.to;
@@ -46,6 +54,12 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </nav>
       <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
+      <ThemeCustomizer
+        open={themeOpen}
+        onClose={() => setThemeOpen(false)}
+        currentTheme={currentTheme}
+        setCurrentTheme={setCurrentTheme}
+      />
     </div>
   );
 };
