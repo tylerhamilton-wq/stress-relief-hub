@@ -5,47 +5,318 @@ import { Headphones, Play, Pause } from "lucide-react";
 interface Sound {
   label: string;
   emoji: string;
-  frequency: number; // used to generate unique tones
+  type: string;
 }
 
 const SOUNDS: Sound[] = [
-  { label: "Rain", emoji: "🌧️", frequency: 200 },
-  { label: "Ocean", emoji: "🌊", frequency: 150 },
-  { label: "Forest", emoji: "🌲", frequency: 300 },
-  { label: "Wind", emoji: "💨", frequency: 120 },
-  { label: "Fireplace", emoji: "🔥", frequency: 180 },
-  { label: "Night", emoji: "🌙", frequency: 100 },
+  { label: "Rain", emoji: "🌧️", type: "rain" },
+  { label: "Ocean", emoji: "🌊", type: "ocean" },
+  { label: "Forest", emoji: "🌲", type: "forest" },
+  { label: "Wind", emoji: "💨", type: "wind" },
+  { label: "Fireplace", emoji: "🔥", type: "fireplace" },
+  { label: "Night Crickets", emoji: "🌙", type: "night" },
+  { label: "Thunder", emoji: "⛈️", type: "thunder" },
+  { label: "Stream", emoji: "🏞️", type: "stream" },
+  { label: "Heartbeat", emoji: "💓", type: "heartbeat" },
 ];
 
-const createNoise = (ctx: AudioContext, frequency: number, gain: number): { source: AudioBufferSourceNode; gainNode: GainNode } => {
-  const sampleRate = ctx.sampleRate;
-  const duration = 4;
-  const bufferSize = sampleRate * duration;
-  const buffer = ctx.createBuffer(1, bufferSize, sampleRate);
-  const data = buffer.getChannelData(0);
+interface SoundNodes {
+  sources: AudioBufferSourceNode[];
+  oscillators: OscillatorNode[];
+  gainNode: GainNode;
+}
 
-  // Generate colored noise based on frequency param
-  let b0 = 0, b1 = 0, b2 = 0;
-  const factor = frequency / 300;
-  for (let i = 0; i < bufferSize; i++) {
-    const white = Math.random() * 2 - 1;
-    b0 = 0.99886 * b0 + white * 0.0555179 * factor;
-    b1 = 0.99332 * b1 + white * 0.0750759 * factor;
-    b2 = 0.96900 * b2 + white * 0.1538520 * factor;
-    data[i] = (b0 + b1 + b2 + white * 0.5362) * 0.11;
+const createSound = (ctx: AudioContext, type: string, gain: number): SoundNodes => {
+  const masterGain = ctx.createGain();
+  masterGain.gain.value = gain;
+  masterGain.connect(ctx.destination);
+
+  const sources: AudioBufferSourceNode[] = [];
+  const oscillators: OscillatorNode[] = [];
+  const sampleRate = ctx.sampleRate;
+
+  const makeNoiseBuffer = (duration: number, channels = 1) => {
+    const buf = ctx.createBuffer(channels, sampleRate * duration, sampleRate);
+    for (let c = 0; c < channels; c++) {
+      const d = buf.getChannelData(c);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    }
+    return buf;
+  };
+
+  if (type === "rain") {
+    // Bandpass-filtered noise to simulate rain patter
+    const buf = makeNoiseBuffer(4);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.loop = true;
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.value = 8000;
+    bp.Q.value = 0.4;
+    const hp = ctx.createBiquadFilter();
+    hp.type = "highpass";
+    hp.frequency.value = 2000;
+    hp.Q.value = 0.5;
+    src.connect(bp).connect(hp).connect(masterGain);
+    src.start();
+    sources.push(src);
+
+    // Secondary lower layer for heavy rain body
+    const src2 = ctx.createBufferSource();
+    src2.buffer = makeNoiseBuffer(4);
+    src2.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 1000;
+    const g2 = ctx.createGain();
+    g2.gain.value = 0.3;
+    src2.connect(lp).connect(g2).connect(masterGain);
+    src2.start();
+    sources.push(src2);
+  } else if (type === "ocean") {
+    // Slowly modulated noise for waves
+    const buf = makeNoiseBuffer(6);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 600;
+    lp.Q.value = 1;
+    // LFO to modulate filter for wave motion
+    const lfo = ctx.createOscillator();
+    lfo.type = "sine";
+    lfo.frequency.value = 0.12;
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = 400;
+    lfo.connect(lfoGain).connect(lp.frequency);
+    lfo.start();
+    oscillators.push(lfo);
+    // Volume LFO for wave swell
+    const volLfo = ctx.createOscillator();
+    volLfo.type = "sine";
+    volLfo.frequency.value = 0.1;
+    const volLfoGain = ctx.createGain();
+    volLfoGain.gain.value = 0.3;
+    const baseGain = ctx.createGain();
+    baseGain.gain.value = 0.7;
+    volLfo.connect(volLfoGain).connect(baseGain.gain);
+    volLfo.start();
+    oscillators.push(volLfo);
+    src.connect(lp).connect(baseGain).connect(masterGain);
+    src.start();
+    sources.push(src);
+  } else if (type === "forest") {
+    // Gentle rustling (soft filtered noise)
+    const src = ctx.createBufferSource();
+    src.buffer = makeNoiseBuffer(4);
+    src.loop = true;
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.value = 3000;
+    bp.Q.value = 0.3;
+    const g = ctx.createGain();
+    g.gain.value = 0.15;
+    src.connect(bp).connect(g).connect(masterGain);
+    src.start();
+    sources.push(src);
+    // Bird-like tones using sine oscillators
+    [1800, 2400, 3200].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      const tremolo = ctx.createOscillator();
+      tremolo.type = "sine";
+      tremolo.frequency.value = 3 + i * 2;
+      const tremoloGain = ctx.createGain();
+      tremoloGain.gain.value = 0.015;
+      const oscGain = ctx.createGain();
+      oscGain.gain.value = 0;
+      tremolo.connect(tremoloGain).connect(oscGain.gain);
+      osc.connect(oscGain).connect(masterGain);
+      osc.start();
+      tremolo.start();
+      oscillators.push(osc, tremolo);
+    });
+  } else if (type === "wind") {
+    // Slowly sweeping filtered noise
+    const src = ctx.createBufferSource();
+    src.buffer = makeNoiseBuffer(6);
+    src.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 400;
+    lp.Q.value = 2;
+    const lfo = ctx.createOscillator();
+    lfo.type = "sine";
+    lfo.frequency.value = 0.05;
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = 300;
+    lfo.connect(lfoGain).connect(lp.frequency);
+    lfo.start();
+    oscillators.push(lfo);
+    src.connect(lp).connect(masterGain);
+    src.start();
+    sources.push(src);
+  } else if (type === "fireplace") {
+    // Crackling: filtered noise with random amplitude modulation
+    const buf = ctx.createBuffer(1, sampleRate * 4, sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) {
+      const white = Math.random() * 2 - 1;
+      // Random crackle bursts
+      const crackle = Math.random() > 0.97 ? (Math.random() * 3) : 0.1;
+      d[i] = white * crackle * 0.15;
+    }
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.loop = true;
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.value = 2000;
+    bp.Q.value = 0.5;
+    src.connect(bp).connect(masterGain);
+    src.start();
+    sources.push(src);
+    // Low rumble
+    const src2 = ctx.createBufferSource();
+    src2.buffer = makeNoiseBuffer(4);
+    src2.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 200;
+    const g2 = ctx.createGain();
+    g2.gain.value = 0.2;
+    src2.connect(lp).connect(g2).connect(masterGain);
+    src2.start();
+    sources.push(src2);
+  } else if (type === "night") {
+    // Cricket chirps: fast oscillating tones
+    [4200, 4800, 5100].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      const chirpLfo = ctx.createOscillator();
+      chirpLfo.type = "square";
+      chirpLfo.frequency.value = 15 + i * 5;
+      const chirpGain = ctx.createGain();
+      chirpGain.gain.value = 0.02;
+      const oscGain = ctx.createGain();
+      oscGain.gain.value = 0;
+      chirpLfo.connect(chirpGain).connect(oscGain.gain);
+      osc.connect(oscGain).connect(masterGain);
+      osc.start();
+      chirpLfo.start();
+      oscillators.push(osc, chirpLfo);
+    });
+    // Soft background noise
+    const src = ctx.createBufferSource();
+    src.buffer = makeNoiseBuffer(4);
+    src.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 300;
+    const g = ctx.createGain();
+    g.gain.value = 0.08;
+    src.connect(lp).connect(g).connect(masterGain);
+    src.start();
+    sources.push(src);
+  } else if (type === "thunder") {
+    // Deep rumbling noise with slow modulation
+    const src = ctx.createBufferSource();
+    src.buffer = makeNoiseBuffer(6);
+    src.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 150;
+    lp.Q.value = 1;
+    const lfo = ctx.createOscillator();
+    lfo.type = "sine";
+    lfo.frequency.value = 0.03;
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = 100;
+    lfo.connect(lfoGain).connect(lp.frequency);
+    lfo.start();
+    oscillators.push(lfo);
+    // Volume swell for rumble effect
+    const volLfo = ctx.createOscillator();
+    volLfo.type = "sine";
+    volLfo.frequency.value = 0.07;
+    const volGain = ctx.createGain();
+    volGain.gain.value = 0.5;
+    const baseG = ctx.createGain();
+    baseG.gain.value = 0.5;
+    volLfo.connect(volGain).connect(baseG.gain);
+    volLfo.start();
+    oscillators.push(volLfo);
+    src.connect(lp).connect(baseG).connect(masterGain);
+    src.start();
+    sources.push(src);
+  } else if (type === "stream") {
+    // Babbling brook: high-pass noise with quick modulation
+    const src = ctx.createBufferSource();
+    src.buffer = makeNoiseBuffer(4);
+    src.loop = true;
+    const hp = ctx.createBiquadFilter();
+    hp.type = "highpass";
+    hp.frequency.value = 3000;
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.value = 5000;
+    bp.Q.value = 0.8;
+    const lfo = ctx.createOscillator();
+    lfo.type = "sine";
+    lfo.frequency.value = 0.8;
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = 2000;
+    lfo.connect(lfoGain).connect(bp.frequency);
+    lfo.start();
+    oscillators.push(lfo);
+    const g = ctx.createGain();
+    g.gain.value = 0.4;
+    src.connect(hp).connect(bp).connect(g).connect(masterGain);
+    src.start();
+    sources.push(src);
+    // Lower water flow
+    const src2 = ctx.createBufferSource();
+    src2.buffer = makeNoiseBuffer(4);
+    src2.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 800;
+    const g2 = ctx.createGain();
+    g2.gain.value = 0.15;
+    src2.connect(lp).connect(g2).connect(masterGain);
+    src2.start();
+    sources.push(src2);
+  } else if (type === "heartbeat") {
+    // Low frequency pulse
+    const osc = ctx.createOscillator();
+    osc.type = "sine";
+    osc.frequency.value = 55;
+    const pulseGain = ctx.createGain();
+    pulseGain.gain.value = 0;
+    // Create heartbeat rhythm: lub-dub pattern
+    const now = ctx.currentTime;
+    const beatLen = 0.85;
+    for (let i = 0; i < 200; i++) {
+      const t = now + i * beatLen;
+      // Lub
+      pulseGain.gain.setValueAtTime(0, t);
+      pulseGain.gain.linearRampToValueAtTime(0.8, t + 0.06);
+      pulseGain.gain.linearRampToValueAtTime(0, t + 0.15);
+      // Dub
+      pulseGain.gain.setValueAtTime(0, t + 0.2);
+      pulseGain.gain.linearRampToValueAtTime(0.5, t + 0.26);
+      pulseGain.gain.linearRampToValueAtTime(0, t + 0.38);
+    }
+    osc.connect(pulseGain).connect(masterGain);
+    osc.start();
+    oscillators.push(osc);
   }
 
-  const source = ctx.createBufferSource();
-  source.buffer = buffer;
-  source.loop = true;
-
-  const gainNode = ctx.createGain();
-  gainNode.gain.value = gain;
-
-  source.connect(gainNode);
-  gainNode.connect(ctx.destination);
-
-  return { source, gainNode };
+  return { sources, oscillators, gainNode: masterGain };
 };
 
 const SleepSounds = () => {
