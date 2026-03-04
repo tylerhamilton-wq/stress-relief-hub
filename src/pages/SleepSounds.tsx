@@ -323,17 +323,23 @@ const SleepSounds = () => {
   const [volumes, setVolumes] = useState<Record<string, number>>({});
   const [playing, setPlaying] = useState(false);
   const ctxRef = useRef<AudioContext | null>(null);
-  const nodesRef = useRef<Record<string, { source: AudioBufferSourceNode; gainNode: GainNode }>>({});
+  const nodesRef = useRef<Record<string, SoundNodes>>({});
 
   const activeCount = Object.values(volumes).filter((v) => v > 0).length;
 
+  const stopAll = () => {
+    Object.values(nodesRef.current).forEach(({ sources, oscillators }) => {
+      sources.forEach((s) => { try { s.stop(); } catch {} });
+      oscillators.forEach((o) => { try { o.stop(); } catch {} });
+    });
+    nodesRef.current = {};
+    ctxRef.current?.close();
+    ctxRef.current = null;
+  };
+
   const togglePlay = () => {
     if (playing) {
-      // Stop all
-      Object.values(nodesRef.current).forEach(({ source }) => { try { source.stop(); } catch {} });
-      nodesRef.current = {};
-      ctxRef.current?.close();
-      ctxRef.current = null;
+      stopAll();
       setPlaying(false);
     } else {
       if (activeCount === 0) return;
@@ -342,8 +348,7 @@ const SleepSounds = () => {
       SOUNDS.forEach((s) => {
         const vol = volumes[s.label] || 0;
         if (vol > 0) {
-          const node = createNoise(ctx, s.frequency, vol / 100);
-          node.source.start();
+          const node = createSound(ctx, s.type, vol / 100);
           nodesRef.current[s.label] = node;
         }
       });
@@ -351,7 +356,6 @@ const SleepSounds = () => {
     }
   };
 
-  // Update gain in real-time
   const setVolume = (label: string, value: number) => {
     setVolumes((prev) => ({ ...prev, [label]: value }));
     const node = nodesRef.current[label];
@@ -360,12 +364,8 @@ const SleepSounds = () => {
     }
   };
 
-  // Cleanup on unmount
   useEffect(() => {
-    return () => {
-      Object.values(nodesRef.current).forEach(({ source }) => { try { source.stop(); } catch {} });
-      ctxRef.current?.close();
-    };
+    return () => { stopAll(); };
   }, []);
 
   return (
