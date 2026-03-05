@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Mail, Heart, Gamepad2, Home, CalendarIcon, Activity, BookOpen, Sparkles, Sun, Headphones } from "lucide-react";
 import ThemeCustomizer, { useTheme } from "@/components/ThemeCustomizer";
+import logoImg from "@/assets/Logo_Final.png";
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
