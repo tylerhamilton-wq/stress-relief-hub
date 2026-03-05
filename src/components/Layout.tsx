@@ -31,7 +31,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             className="text-lg font-bold text-primary transition-transform hover:scale-105 active:scale-95"
             title="Customize theme"
           >
-            🌿 StudentZen
+            <img src={logoImg} alt="StudentZen" className="h-8" />
           </button>
           <div className="flex gap-1">
             {navItems.map((item) => {
