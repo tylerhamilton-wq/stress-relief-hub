@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Mail, Heart, Gamepad2, Home, CalendarIcon, Activity, BookOpen, Sparkles, Sun, Headphones } from "lucide-react";
 import ThemeCustomizer, { useTheme } from "@/components/ThemeCustomizer";
+import logoImg from "@/assets/Logo_Final.png";
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
@@ -30,7 +31,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             className="text-lg font-bold text-primary transition-transform hover:scale-105 active:scale-95"
             title="Customize theme"
           >
-            🌿 StudentZen
+            <img src={logoImg} alt="StudentZen" className="h-8" />
           </button>
           <div className="flex gap-1">
             {navItems.map((item) => {
